@@ -20,7 +20,11 @@ RUN apt-get update && \
     apt-get remove --purge -y build-essential libpq-dev && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/* && \
-    adduser --disabled-password --no-create-home app
+    adduser --disabled-password --no-create-home app && \
+    mkdir -p /vol/web/static && \
+    mkdir -p /vol/web/media && \
+    chown -R app:app /vol && \
+    chmod -R 755 /vol
 
 #allows to not use /py/bin for every run command
 
