@@ -6,6 +6,7 @@ ENV PYTHONUNBUFFERED=1
 
 COPY ./requirements.txt /requirements.txt
 COPY ./app app
+COPY ./scripts /scripts
 
 WORKDIR /app
 EXPOSE 8000
@@ -13,7 +14,7 @@ EXPOSE 8000
 #creates venv and instals req.txt
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends postgresql-client build-essential libpq-dev && \
+    apt-get install -y --no-install-recommends postgresql-client build-essential libpq-dev linux-headers-amd64 libpcre3-dev && \
     python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
     /py/bin/pip install -r /requirements.txt && \
@@ -24,10 +25,13 @@ RUN apt-get update && \
     mkdir -p /vol/web/static && \
     mkdir -p /vol/web/media && \
     chown -R app:app /vol && \
-    chmod -R 755 /vol
+    chmod -R 755 /vol && \
+    chmod -R +x /scripts
 
 #allows to not use /py/bin for every run command
 
-ENV PATH="/py/bin:$PATH"
+ENV PATH="/scripts:/py/bin:$PATH"
 
 USER app
+
+CMD ["run.sh"]
